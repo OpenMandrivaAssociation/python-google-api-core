@@ -13,6 +13,13 @@ BuildArch:	noarch
 %description
 Google API client core library
 
+%prep -a
+# Cooker python-protobuf provides python3.15dist(protobuf) = 6.32.1.
+# opentelemetry-api is not packaged. The library imports it only when tracing is enabled.
+find . -name pyproject.toml -o -name PKG-INFO -o -name requires.txt | xargs sed -i \
+	-e 's/6\.33\.5/6.32.1/g' \
+	-e '/opentelemetry-api/d'
+
 %files
 %{py_sitedir}/google
 %{py_sitedir}/google_api_core-%{version}.dist-info
